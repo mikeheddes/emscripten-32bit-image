@@ -17,11 +17,6 @@ WORKDIR /root/emsdk
 RUN ./emsdk install latest-32bit \
   && ./emsdk activate latest-32bit
 
-RUN cat ./emsdk_env.sh >> ~/.bashrc
-
-# Copy file to the by emscripten expected location
-# (this is an bug by emscripten)
-RUN cp -a ~/emsdk/binaryen/tag-1.38.27_32bit_binaryen/. \
-  ~/emsdk/binaryen/tag-1.38.27_64bit_binaryen/
+RUN echo "source ~/emsdk/emsdk_env.sh" >> ~/.bashrc
 
 CMD ["/bin/bash"]
