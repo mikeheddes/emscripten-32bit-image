@@ -19,4 +19,12 @@ RUN ./emsdk install latest-32bit \
 
 RUN echo "source ~/emsdk/emsdk_env.sh" >> ~/.bashrc
 
+RUN VERSION=$(echo ~/emsdk/binaryen/tag-*_32bit_binaryen) \
+  && VERSION=${VERSION%_*} \
+  && VERSION=${VERSION%_*} \
+  && VERSION=${VERSION##*-} \
+  && cp -a ~/emsdk/binaryen/tag-*_32bit_binaryen "/root/emsdk/binaryen/tag-${VERSION}_64bit_binaryen/"
+
+WORKDIR /
+
 CMD ["/bin/bash"]
