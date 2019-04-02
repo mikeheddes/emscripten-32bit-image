@@ -18,13 +18,15 @@ RUN ./emsdk install latest-32bit \
   && ./emsdk activate latest-32bit
 
 # Sets environment variables when launching bash
-RUN echo "source ~/emsdk/emsdk_env.sh" >> ~/.bashrc
+RUN echo ". ~/emsdk/emsdk_env.sh" >> ~/.bashrc
 
 RUN VERSION=$(echo ~/emsdk/binaryen/tag-*_32bit_binaryen) \
   && VERSION=${VERSION%_*} \
   && VERSION=${VERSION%_*} \
   && VERSION=${VERSION##*-} \
   && cp -a ~/emsdk/binaryen/tag-*_32bit_binaryen "/root/emsdk/binaryen/tag-${VERSION}_64bit_binaryen/"
+
+SHELL [ "/bin/bash", "-c", "-i" ]
 
 WORKDIR /
 
