@@ -3,7 +3,7 @@ FROM i386/ubuntu:latest
 
 # Install dependencies
 RUN apt-get -y update \
-  && apt-get -y -qq install build-essential m4 git cmake nodejs \
+  && apt-get -y -qq install build-essential m4 git cmake nodejs npm \
   default-jre python3.6 python3-distutils curl \
   && ln /usr/bin/python3.6 /usr/bin/python
 
