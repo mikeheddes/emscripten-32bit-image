@@ -15,8 +15,9 @@ WORKDIR /root/emsdk
 
 # install the emscripten dependencies en activate the environment
 RUN ./emsdk install latest-32bit \
-  && ./emsdk activate latest-32bit \
-  && cat ./emsdk_env.sh >> ~/.bashrc
+  && ./emsdk activate latest-32bit
+
+RUN cat ./emsdk_env.sh >> ~/.bashrc
 
 # Copy file to the by emscripten expected location
 # (this is an bug by emscripten)
