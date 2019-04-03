@@ -4,8 +4,7 @@ FROM i386/ubuntu:latest
 # Install dependencies
 RUN apt-get -y update \
   && apt-get -y -qq install build-essential m4 git cmake nodejs npm \
-  default-jre python3.6 python3-distutils curl \
-  && ln /usr/bin/python3.6 /usr/bin/python
+  default-jre python3.6 python3-distutils curl
 
 WORKDIR /root
 
@@ -13,20 +12,27 @@ RUN git clone https://github.com/emscripten-core/emsdk.git
 
 WORKDIR /root/emsdk
 
-# install the emscripten dependencies en activate the environment
-RUN ./emsdk install latest-32bit \
-  && ./emsdk activate latest-32bit
+# Install the emscripten dependencies and activate
+RUN ./emsdk install sdk-tag-1.38.30-32bit \
+  && ./emsdk activate sdk-tag-1.38.30-32bit
 
-# Sets environment variables when launching bash
-RUN echo ". ~/emsdk/emsdk_env.sh" >> ~/.bashrc
+# Copy folder to the by emscripten expected location
+RUN cp -a /root/emsdk/binaryen/tag-1.38.30_32bit_binaryen /root/emsdk/binaryen/tag-1.38.30_64bit_binaryen
 
-RUN VERSION=$(echo ~/emsdk/binaryen/tag-*_32bit_binaryen) \
-  && VERSION=${VERSION%_*} \
-  && VERSION=${VERSION%_*} \
-  && VERSION=${VERSION##*-} \
-  && cp -a ~/emsdk/binaryen/tag-*_32bit_binaryen "/root/emsdk/binaryen/tag-${VERSION}_64bit_binaryen/"
+# Set environment variables
+ENV PATH="${PATH}:/root/emsdk"
+ENV PATH="${PATH}:/root/emsdk/clang/tag-e1.38.30/build_tag-e1.38.30_32/bin"
+ENV PATH="${PATH}:/root/emsdk/node/8.9.1_32bit/bin"
+ENV PATH="${PATH}:/root/emsdk/emscripten/tag-1.38.30"
+ENV PATH="${PATH}:/root/emsdk/binaryen/tag-1.38.30_64bit_binaryen/bin"
 
-SHELL [ "/bin/bash", "-c", "-i" ]
+ENV EMSDK="/root/emsdk"
+ENV EM_CONFIG="/root/.emscripten"
+ENV LLVM_ROOT="/root/emsdk/clang/tag-e1.38.30/build_tag-e1.38.30_32/bin"
+ENV EMSDK_NODE="/root/emsdk/node/8.9.1_32bit/bin/node"
+ENV EMSCRIPTEN="/root/emsdk/emscripten/tag-1.38.30"
+ENV EMSCRIPTEN_NATIVE_OPTIMIZER="/root/emsdk/emscripten/tag-1.38.30_32bit_optimizer/optimizer"
+ENV BINARYEN_ROOT="/root/emsdk/binaryen/tag-1.38.30_64bit_binaryen"
 
 WORKDIR /
 
